@@ -1,9 +1,14 @@
-const express = require('express');
-const app     = express();
+const express    = require('express');
+const app        = express();
+const bodyParser = require('body-parser');
 
 require('./db/db');
 
 const authorsController = require('./controllers/authors');
+
+//middleware- must require this before our controller
+app.use(bodyParser.urlencoded({extended: false}));
+
 
 app.use('/authors', authorsController)
 
