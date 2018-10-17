@@ -20,9 +20,21 @@
     </header>
     <main>
       <form action="/articles" method="POST">
-        Title: <input type="text" name="title"><br/>
-        Body: <input type="text" name="body"><br/>
-        <input type="submit" value="Publish Article">
+        <label>Authors</label>
+        <br/>
+        <select name="authorId">
+          <%for (let i = 0; i < authors.length; i++){ %>
+               <option value="<%=authors[i].id%>"><%=authors[i].name%></option>
+          <%}%>
+        </select>
+        <br/>
+        <label for="">Title</label>
+        <br/>
+        <input type="text" name="title" /><br/>
+        <label for="">Body</label>
+        <br/>
+        <textarea name="body"></textarea><br/>
+        <input type="submit" value="Publish Article"/>
       </form>
     </main>
   </body>

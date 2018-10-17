@@ -6,7 +6,6 @@ require('./db/db');
 
 const authorsController = require('./controllers/authors');
 const articlesController = require('./controllers/articles')
-
 // make sure to require this before our controller
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(methodOverride('_method'));
