@@ -3,26 +3,30 @@ const router  = express.Router();
 const Article = require('../models/articles');
 const Author  = require('../models/authors');
 
-
-router.get('/', (req, res)=>{
-  Article.find({}, (err, foundArticles)=>{
+//index route
+router.get('/', async (req, res) => {
+  try {
+    const allArticles = await Article.find();
     res.render('articles/index.ejs', {
-      articles: foundArticles
+      articles: allArticles
     });
-  })
+  } catch (err) {
+    res.send(err)
+  }
 });
 
-
-router.get('/new', (req, res) => {
+//new route
+router.get('/new', async (req, res) => {
   Author.find({}, (err, allAuthors) => {
     res.render('articles/new.ejs', {
       authors: allAuthors
     });
   })
-
 })
 
+//show route
 router.get('/:id', (req, res)=>{
+
   Article.findById(req.params.id, (err, foundArticle)=>{
     Author.findOne({'articles._id': req.params.id}, (err, foundAuthor) => {
       console.log(foundAuthor, ' this is foundAuthor')
@@ -32,8 +36,10 @@ router.get('/:id', (req, res)=>{
         });
     });
   });
+
 });
 
+//edit route
 router.get('/:id/edit', (req, res)=>{
   Article.findById(req.params.id, (err, foundArticle) => {
     // find allAuthors to add them to the page
@@ -52,6 +58,7 @@ router.get('/:id/edit', (req, res)=>{
   });
 });
 
+//post route
 router.post('/', (req, res)=>{
 
   // First we are finding the author that was chosen
@@ -71,6 +78,7 @@ router.post('/', (req, res)=>{
   });
 });
 
+//delete route
 router.delete('/:id', (req, res)=>{
   Article.findByIdAndRemove(req.params.id, (err, deletedArticle)=>{
     // Now that we deleted the article from the Article Model's collection
@@ -89,6 +97,7 @@ router.delete('/:id', (req, res)=>{
   });
 });
 
+//update router
 router.put('/:id', (req, res)=>{
   // Check to see if the user, (req.body.authorId), changed the author
   // if the did we'll need to update the newAuthro and remove the old author
