@@ -14,7 +14,7 @@ const bcrypt  = require('bcrypt');
   });
 });
 
-
+//REGISTER ROUTE
  router.post('/register', async (req, res) => {
 
 //first thing we are going to do is store our password in variable
@@ -38,13 +38,40 @@ console.log(user);
   res.redirect('/authors');
 });
 
-router.post('/login', (req, res) => {
+//LOGIN ROUTE
+router.post('/login', async (req, res) => {
+  //first query the database to see if the user exists
+  try {
+          const foundUser = await User.findOne({username: req.body.username});
+          console.log(foundUser)
 
-  bcrypt.compareSync('the forms password', 'this is the password from database');
-  
+          if(foundUser){
+          // if the users exists use the bcrypt compare password
+          //to make sure the passwords match
+            if(bcrypt.compareSync(req.body.password, foundUser.password)){
+              req.session.logged = true;
 
-  res.redirect('/authors')
-})
+              res.redirect('/authors')
+            } else {
+
+              req.session.message = 'Username or Password is Wrong';
+              res.redirect('/auth/login')
+            }
+
+
+        } else {
+              req.session.message = 'Username or Password is Wrong';
+              res.redirect('/auth/login')
+        } // end of foundUser
+
+
+  } catch(err) {
+    res.send('error')
+  }
+
+});
+
+
 
 
 
